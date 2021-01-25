@@ -1,19 +1,19 @@
 import * as types from './constans';
 import { handleActions } from 'redux-actions';
 
-
 const initialState = {
-    users: []
+  users: [],
 };
 
 export default handleActions(
-    {
-        [types.SAVE_LIST]: (state = initialState, action = {}) => {
-          state.users = action.payload;
-        },
-        [types.SAVE_USER]: (state = initialState, action = {}) => {
-          state.users.push(action.payload);
-        }
+  {
+    [types.SAVE_LIST]: (state = initialState, action = {}) => {
+      state.users = action.payload;
     },
-    initialState
+    [types.SAVE_USER]: (state = initialState, action = {}) => {
+      state.users.push(action.payload);
+      return state;
+    },
+  },
+  initialState
 );
