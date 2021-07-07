@@ -10,18 +10,13 @@ import FormDialog from "./UI/FormDialog";
 import Progress from "./UI/Progress";
 
 
-
+// так делается стабильна сортировка по возрастанию
+// по убыванию поменять местами a и b
 function desc(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
+    return a[orderBy] - b[orderBy];
 }
 
-
+// сортировка в js и так стабильная
 function stableSort(array, cmp) {
     console.log(array);
 
@@ -36,9 +31,11 @@ function stableSort(array, cmp) {
 
 
 function getSorting(order) {
+    // todo: разбить на 2 функции сортировки, а не использовать одну desc
     return order === 'desc' ? (a, b) => desc(a, b) : (a, b) => -desc(a, b);
 }
 
+// todo: дать более понятные названия классов
 const styles = () => ({
     root: {
         marginTop: 30,
@@ -58,12 +55,16 @@ const styles = () => ({
     }
 });
 
-
+// что значит MyList ?
+// todo: дать более конкретное название, к примеру UserTables
+// по зависимостям вижу что реакт 16+ версии, нужно было использовать функциональные компоненты
+// todo: переписать на функциональный компонент
 class MyList extends Component {
     state = {
         grouped: false
     };
 
+    // todo: дать более понятное названии функции, к примеру setGroup
     handleClick = grouped => {
         this.setState({
             grouped: grouped
@@ -74,6 +75,7 @@ class MyList extends Component {
         this.props.Action.getList(1);  //
     };
 
+    // todo: дать более понятное названии функции, к примеру setTableSort
     onSort = (event, property) => {
         const orderBy = property;
         let order = 'desc';
@@ -92,9 +94,13 @@ class MyList extends Component {
         const { users } = this.props.reducer;
         let groupedUsers = {};
 
+        // todo: вынести группы в state
+        // по идее они должны быть в пропсах и приходить с сервера
         const groups =  ['engineer', 'accountant', 'hr', 'manager', null];
 
+        // todo: мемоизировать результат чтобы небыло группировки при каждом рендере
         if (this.state.grouped){
+            // todo: переписать на reduce c объектом
             users.forEach(user => {
                 if (!groupedUsers.hasOwnProperty(user.group)){
                     groupedUsers[user.group] = [];
@@ -105,6 +111,8 @@ class MyList extends Component {
         }
 
         return (
+            // todo: сделать форматирование кода
+            // todo: разбить на несколько компонентов
             <div className={classes.root}>
                 <div className={classes.left}>
                     <BigTableButton handler={() => this.handleClick(false)}>Show All Users</BigTableButton>
@@ -131,14 +139,20 @@ class MyList extends Component {
 
 function mapStateToProps(state) {
     return {
+        // todo: разбить на несколько просов, дав им понятное название
         reducer: state
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
+        // зачем bind всех экшенов ?
+        // нужно мапить то что используется в компоненте
+        // todo: разбить на несколько биндингов функций
+        //       из названия функции должно быть понятно что она делает
         Action: bindActionCreators(Action, dispatch)
     }
 }
 
+// todo: никогда не использовать export default
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(MyList))
